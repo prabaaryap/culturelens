@@ -1,0 +1,10 @@
+# Abaikan folder virtual environment
+venv
+.venv
+
+# Abaikan file environment (rahasia tidak boleh masuk container!)
+.env
+
+# Abaikan folder cache Python
+__pycache__/
+*.pyc
