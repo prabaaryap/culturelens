@@ -1,24 +1,35 @@
-from sqlalchemy import Boolean, Column, Integer, String, ForeignKey
+from sqlalchemy import Boolean, Column, Integer, String, ForeignKey, Text
 from sqlalchemy.orm import relationship
-from .database import Base # 'Base' diimpor dari database.py
+from .database import Base 
 
-class User(Base): # User mewarisi 'Base'
+class User(Base):
     __tablename__ = "users"
-    # ... sisa kode model User ...
+
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String)
-    username = Column(String, unique=True, index=True)
-    email = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
+    
+    # PERBAIKAN: Tambahkan (255) pada semua String
+    name = Column(String(255)) 
+    username = Column(String(255), unique=True, index=True)
+    email = Column(String(255), unique=True, index=True)
+    hashed_password = Column(String(255))
+    
     is_active = Column(Boolean, default=True)
     posts = relationship("Post", back_populates="owner")
 
 
-class Post(Base): # Post juga mewarisi 'Base'
+class Post(Base):
     __tablename__ = "posts"
-    # ... sisa kode model Post ...
+
     id = Column(Integer, primary_key=True, index=True)
-    content = Column(String, index=True)
-    image_url = Column(String)
+    
+    # PERBAIKAN: Gunakan String(255) untuk caption pendek.
+    # Jika Anda ingin teks yang SANGAT panjang (seperti artikel blog), 
+    # Anda bisa mengganti String(255) dengan Text
+    content = Column(String(255), index=True)
+    
+    # URL gambar biasanya cukup 255 karakter, tapi jika URL sangat panjang
+    # (misal dari Google Storage yang token-nya panjang), amannya pakai String(500) atau Text
+    image_url = Column(String(500)) 
+    
     owner_id = Column(Integer, ForeignKey("users.id"))
     owner = relationship("User", back_populates="posts")
