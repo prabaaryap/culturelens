@@ -12,3 +12,4 @@ numpy==1.26.4
 pg8000
 sqlalchemy
 pymysql
+pydantic-settings
