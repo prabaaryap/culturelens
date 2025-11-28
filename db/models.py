@@ -6,14 +6,13 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    
-    # PERBAIKAN: Tambahkan (255) pada semua String
+    # Perhatikan semua String punya angka (255)
     name = Column(String(255)) 
     username = Column(String(255), unique=True, index=True)
     email = Column(String(255), unique=True, index=True)
     hashed_password = Column(String(255))
-    
     is_active = Column(Boolean, default=True)
+    
     posts = relationship("Post", back_populates="owner")
 
 
@@ -22,13 +21,11 @@ class Post(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     
-    # PERBAIKAN: Gunakan String(255) untuk caption pendek.
-    # Jika Anda ingin teks yang SANGAT panjang (seperti artikel blog), 
-    # Anda bisa mengganti String(255) dengan Text
-    content = Column(String(255), index=True)
+    # Untuk konten postingan, kita pakai Text (bisa panjang sekali)
+    # Jika ingin pendek, pakai String(255)
+    content = Column(Text, index=True) 
     
-    # URL gambar biasanya cukup 255 karakter, tapi jika URL sangat panjang
-    # (misal dari Google Storage yang token-nya panjang), amannya pakai String(500) atau Text
+    # URL gambar kita beri jatah lebih banyak (500)
     image_url = Column(String(500)) 
     
     owner_id = Column(Integer, ForeignKey("users.id"))
