@@ -15,3 +15,6 @@ pymysql
 pydantic-settings
 cryptography
 google-cloud-storage
+tensorflow-cpu
+numpy
+pillow
