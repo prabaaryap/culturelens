@@ -1,0 +1,13 @@
+# Folder environment (Folder besar yang bikin berat)
+venv/
+__pycache__/
+
+# File Rahasia (Sangat Bahaya kalau ada di GitHub)
+.env
+
+# Database Lokal (Tidak dipakai di Cloud)
+*.db
+culturelens.db
+
+# Folder Upload Lokal
+uploads/
