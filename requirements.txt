@@ -14,3 +14,4 @@ sqlalchemy
 pymysql
 pydantic-settings
 cryptography
+google-cloud-storage
