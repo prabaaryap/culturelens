@@ -1,7 +1,10 @@
 from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-import shutil # For saving files
+
+# HAPUS: import shutil (Kita tidak pakai penyimpanan lokal lagi)
+# TAMBAH: Import fungsi upload GCS yang baru kita buat
+from core.gcs import upload_image_to_gcs 
 
 from db import database, models
 from schemas import schemas
@@ -16,16 +19,25 @@ def create_post(
     db: Session = Depends(database.get_db),
     current_user: models.User = Depends(get_current_user)
 ):
-    # WARNING: This saves file locally. For production, use Google Cloud Storage.
-    file_location = f"uploads/{file.filename}"
-    with open(file_location, "wb+") as file_object:
-        shutil.copyfileobj(file.file, file_object)
+    # 1. Validasi File (Opsional: Pastikan yang diupload adalah gambar)
+    if not file.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="File harus berupa gambar")
 
+    # 2. Upload ke Google Cloud Storage
+    try:
+        # Fungsi ini akan mengembalikan URL publik (https://storage.googleapis.com/...)
+        public_url = upload_image_to_gcs(file, file.filename, file.content_type)
+    except Exception as e:
+        print(f"Error Upload: {e}") # Print error di log untuk debugging
+        raise HTTPException(status_code=500, detail="Gagal mengupload gambar ke Cloud Storage")
+
+    # 3. Simpan URL Cloud Storage ke Database
     db_post = models.Post(
         content=content,
-        image_url=file_location, # In production, this would be the GCS URL
+        image_url=public_url, # Sekarang kita simpan URL GCS, bukan path lokal
         owner_id=current_user.id
     )
+    
     db.add(db_post)
     db.commit()
     db.refresh(db_post)
