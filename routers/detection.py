@@ -1,3 +1,4 @@
+from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 from fastapi import APIRouter, Depends, UploadFile, File, HTTPException
 from .users import get_current_user
 from db import models
@@ -111,7 +112,7 @@ def predict_local(image_bytes):
         # 5. Normalisasi (Ubah nilai pixel 0-255 menjadi 0-1)
         # PENTING: Pastikan training Anda juga melakukan pembagian 255.0 ini. 
         # Jika training Anda tidak membagi 255, hapus baris ini.
-        img_array = img_array / 255.0
+        img_array = preprocess_input(img_array)
 
         # --- Prediksi ---
         predictions = MODEL.predict(img_array)
