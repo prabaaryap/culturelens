@@ -20,5 +20,4 @@ Pillow==10.4.0
 # --- Machine Learning (Versi Ringan) ---
 # PENTING: Pakai CPU saja untuk Cloud Run agar hemat & cepat
 tensorflow-cpu
-numpy==1.26.4
-pip install google-cloud-aiplatform
+numpy
