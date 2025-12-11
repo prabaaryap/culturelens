@@ -11,6 +11,7 @@ class PostCreate(PostBase):
 class Post(PostBase):
     id: int
     owner_id: int
+    owner: UserPublic
     image_url: str
 
     class Config:
