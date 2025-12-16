@@ -21,6 +21,7 @@ class Post(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     
+    title: Column(String(255), index=True)
     # Untuk konten postingan, kita pakai Text (bisa panjang sekali)
     # Jika ingin pendek, pakai String(255)
     content = Column(Text)#index=true dihilangkan 
