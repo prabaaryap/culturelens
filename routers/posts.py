@@ -13,6 +13,7 @@ router = APIRouter(prefix="/posts", tags=["Posts"])
 
 @router.post("/", response_model=schemas.Post)
 def create_post(
+    title : str = Form(...),
     content: str = Form(...),
     file: UploadFile = File(...),
     db: Session = Depends(database.get_db),
@@ -41,6 +42,7 @@ def create_post(
 
     # 3. Simpan URL Cloud Storage ke Database
     db_post = models.Post(
+        title=title,
         content=content,
         image_url=public_url, 
         owner_id=current_user.id
