@@ -1,6 +1,13 @@
 from pydantic import BaseModel
 from typing import List, Optional
 
+# --- User Public ---
+class UserPublic(BaseModel):
+    username : str
+    
+    class Config:
+        from_attributes = True
+        
 # --- Post Schemas ---
 class PostBase(BaseModel):
     content: str
@@ -11,6 +18,7 @@ class PostCreate(PostBase):
 class Post(PostBase):
     id: int
     owner_id: int
+    owner: UserPublic
     image_url: str
 
     class Config:
