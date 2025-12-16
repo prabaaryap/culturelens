@@ -23,7 +23,7 @@ class Post(Base):
     
     # Untuk konten postingan, kita pakai Text (bisa panjang sekali)
     # Jika ingin pendek, pakai String(255)
-    content = Column(Text, index=True) 
+    content = Column(Text)#index=true dihilangkan 
     
     # URL gambar kita beri jatah lebih banyak (500)
     image_url = Column(String(500)) 
