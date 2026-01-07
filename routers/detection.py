@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, Query
 from .users import get_current_user
 from db import models
 from enum import Enum
+import time
 
 # --- IMPORT PENTING ---
 # Kita memanggil fungsi dari file ml.py yang baru kita buat di atas
@@ -58,10 +59,18 @@ async def analyze_image(
     # 1. Baca file gambar
     image_bytes = await file.read()
     
+    #start waktu pembacaan
+    start_time = time.time()
+    
     # 2. Panggil fungsi prediksi dari core/ml.py
     # Kita kirimkan pilihan model dari user (model_type.value) ke fungsi tersebut
     try:
         detected_label, confidence = predict_object(image_bytes, model_type.value)
+        # --- HITUNG DURASI ---
+        end_time = time.time()
+        inference_delay = end_time - start_time
+        # Opsional: Munculkan di terminal log server
+        print(f"Inference Delay: {inference_delay:.4f} seconds")
     except ValueError as e:
         # Error jika model belum siap
         raise HTTPException(status_code=503, detail=str(e))
@@ -82,6 +91,7 @@ async def analyze_image(
     # 4. Kembalikan Hasil
     return {
         "model_used": model_type.value, # Memberi tahu user model apa yang akhirnya dipakai
+        "inference_delay": f"{inference_delay:.4f} seconds",
         "object_name": detected_label,
         "accuracy": float(confidence),
         "about": object_info["about"],
